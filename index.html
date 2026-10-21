@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapScape | Discover the Visual World</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#">SnapScape<span>.</span></a>
+    <p class="header-note">A world of visuals, waiting to be found.</p>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR NEXT DISCOVERY STARTS HERE</p>
+        <h1>Ideas look better<br>in <span>pictures.</span></h1>
+        <p class="description">
+          Explore places, wildlife, architecture and everything
+          your imagination can dream up.
+        </p>
+      </div>
+
+      <div class="search-panel">
+        <label for="search-input">What do you want to discover?</label>
+
+        <form id="search-form">
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Try mountains, space, art..."
+            aria-label="Search for images"
+          >
+          <button id="search-button" type="submit">Search ↗</button>
+        </form>
+
+        <button id="clear-button" class="clear-button" type="button">
+          Clear search
+        </button>
+
+        <p class="search-hint">A little curiosity goes a long way.</p>
+      </div>
+    </section>
+
+    <section class="discover-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">EXPLORE YOUR INTERESTS</p>
+          <h2>Where should we look?</h2>
+        </div>
+        <p class="result-count" id="result-count">Your gallery awaits</p>
+      </div>
+
+      <nav class="categories" aria-label="Suggested search topics">
+        <button class="category-chip" type="button">Nature</button>
+        <button class="category-chip" type="button">Architecture</button>
+        <button class="category-chip" type="button">Space</button>
+        <button class="category-chip" type="button">Wildlife</button>
+      </nav>
+
+      <p class="empty-state" id="empty-state">
+        <span class="empty-icon">✳</span>
+        <strong>Your visual adventure starts here.</strong>
+        <span>Search for a topic and your discoveries will appear in this space.</span>
+      </p>
+
+      <section id="results" aria-label="Image search results"></section>
+    </section>
+  </main>
+
+  <footer>
+    <p>SnapScape © 2026 · Made for curious minds.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
