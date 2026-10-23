@@ -5,70 +5,77 @@ const results = document.getElementById("results");
 const status = document.getElementById("result-count");
 const emptyState = document.getElementById("empty-state");
 
+const originalMessage = {
+  title: "Your visual adventure starts here.",
+  description:
+    "Search for a topic and your discoveries will appear in this space."
+};
+
+function showEmptyState(title, description) {
+  emptyState.hidden = false;
+  emptyState.querySelector("strong").textContent = title;
+  emptyState.querySelector("span:last-child").textContent = description;
+}
+
+function showLoading(query) {
+  results.innerHTML = "";
+  emptyState.hidden = true;
+  status.textContent = "Searching for \"" + query + "\"...";
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const query = input.value.trim();
 
-  // Ignore empty searches
   if (!query) {
     return;
   }
 
-  // Build the API URL
   const url =
     "https://commons.wikimedia.org/w/api.php?action=query" +
     "&generator=search&gsrsearch=" + encodeURIComponent(query) +
     "&gsrnamespace=6&gsrlimit=12&prop=imageinfo" +
     "&iiprop=url&iiurlwidth=300&format=json&origin=*";
 
+  // Loading state: show feedback before fetching
+  showLoading(query);
+
   try {
     const response = await fetch(url);
 
-    // Check whether the request succeeded
     if (!response.ok) {
       throw new Error("Request failed: " + response.status);
     }
 
     const data = await response.json();
-
-    // Convert the API results into an array
     const items = data.query
       ? Object.values(data.query.pages)
       : [];
 
-    // Clear old results before displaying new ones
     results.innerHTML = "";
-    emptyState.hidden = true;
 
-    // Enhancement: display the result count
-    status.textContent =
-      "Showing " + items.length + " results for \"" + query + "\"";
+    const validItems = items.filter(
+      (item) => item.imageinfo?.[0]?.thumburl
+    );
 
-    if (items.length === 0) {
-      emptyState.hidden = false;
-      emptyState.querySelector("strong").textContent =
-        "No images found.";
-      emptyState.querySelector("span:last-child").textContent =
-        "Try another search topic.";
+    if (validItems.length === 0) {
+      status.textContent = "No results for \"" + query + "\"";
+      showEmptyState(
+        "No images found.",
+        "Try another search topic."
+      );
       return;
     }
 
-    // Create one card for each image
-    items.forEach((item) => {
+    validItems.forEach((item) => {
       const card = document.createElement("article");
       card.className = "card";
 
-      const imageUrl = item.imageinfo?.[0]?.thumburl;
-
-if (!imageUrl) {
-  return;
-}
-
-const img = document.createElement("img");
-img.src = imageUrl;
-img.alt = item.title;
-img.loading = "lazy";
+      const img = document.createElement("img");
+      img.src = item.imageinfo[0].thumburl;
+      img.alt = item.title.replace("File:", "").replace(/_/g, " ");
+      img.loading = "lazy";
 
       const caption = document.createElement("p");
       caption.textContent = item.title
@@ -79,19 +86,26 @@ img.loading = "lazy";
       card.appendChild(caption);
       results.appendChild(card);
     });
+
+    status.textContent =
+      "Showing " + validItems.length +
+      " results for \"" + query + "\"";
+
+    emptyState.hidden = true;
   } catch (error) {
     results.innerHTML = "";
-    status.textContent = "Unable to load images.";
-    emptyState.hidden = false;
-    emptyState.querySelector("strong").textContent =
-      "Something went wrong.";
-    emptyState.querySelector("span:last-child").textContent =
-      "Check your internet connection and try again.";
+    status.textContent = "Search failed";
+
+    showEmptyState(
+      "Something went wrong.",
+      "Check your internet connection and try again."
+    );
+
     console.error(error);
   }
 });
 
-// Make the category chips perform searches
+// Category chips trigger searches
 const chips = document.querySelectorAll(".category-chip");
 
 chips.forEach((chip) => {
