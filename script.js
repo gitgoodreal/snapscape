@@ -59,10 +59,16 @@ form.addEventListener("submit", async (event) => {
       const card = document.createElement("article");
       card.className = "card";
 
-      const img = document.createElement("img");
-      img.src = item.imageinfo[0].thumburl;
-      img.alt = item.title;
-      img.loading = "lazy";
+      const imageUrl = item.imageinfo?.[0]?.thumburl;
+
+if (!imageUrl) {
+  return;
+}
+
+const img = document.createElement("img");
+img.src = imageUrl;
+img.alt = item.title;
+img.loading = "lazy";
 
       const caption = document.createElement("p");
       caption.textContent = item.title
