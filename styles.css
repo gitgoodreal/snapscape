@@ -278,3 +278,10 @@ footer {
   }
 }
 
+#search-button:focus-visible,
+.clear-button:focus-visible,
+.category-chip:focus-visible,
+.brand:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
